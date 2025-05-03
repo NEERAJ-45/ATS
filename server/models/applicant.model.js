@@ -27,11 +27,7 @@ const applicantSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-    },
-    skills: [String],
-    resumePath: String,
-    resumeScore: Number,
-    status: { type: String, default: "" },
+    }
 });
 
 module.exports = mongoose.model("Applicant", applicantSchema);

@@ -39,6 +39,7 @@ def index():
 
 @app.route('/score', methods=['POST'])
 def get_score():
+    print("new request")
     if not request.is_json:
         return {"error": "Content-Type must be application/json"}, 400
     
@@ -48,6 +49,7 @@ def get_score():
     if not pdf_path:
         return {"error": "pdf_path is required"}, 400
     
+    print(pdf_path)
     if not os.path.exists(pdf_path):
         return {"error": "PDF file not found"}, 404
 

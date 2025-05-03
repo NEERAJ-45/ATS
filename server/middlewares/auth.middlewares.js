@@ -1,11 +1,18 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    // Try to get the token from cookies
+    let token = req.cookies?.token;
 
+    // If not found in cookies, fallback to Authorization header
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
+        const authHeader = req.headers["authorization"];
+        token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+    }
+    if (!token) {
+        return res
+            .status(401)
+            .json({ message: "Access denied. Noxxx token provided." });
     }
 
     try {
@@ -13,7 +20,7 @@ const authenticateToken = (req, res, next) => {
         req.user = decoded; // Add user info to request object
         next();
     } catch (error) {
-        res.status(403).json({ message: 'Invalid token' });
+        res.status(403).json({ message: "Invalid token" });
     }
 };
 
@@ -21,8 +28,8 @@ const authenticateToken = (req, res, next) => {
 const authorizeRole = (roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
-            return res.status(403).json({ 
-                message: 'Access denied. Insufficient permissions.' 
+            return res.status(403).json({
+                message: "Access denied. Insufficient permissions.",
             });
         }
         next();
@@ -31,5 +38,5 @@ const authorizeRole = (roles) => {
 
 module.exports = {
     authenticateToken,
-    authorizeRole
+    authorizeRole,
 };
