@@ -1,30 +1,66 @@
-from flask import Flask, request, jsonify
-import fitz  # PyMuPDF
-from flask_cors import CORS
+from flask import Flask, request, render_template
+from werkzeug.utils import secure_filename
+import os
+
+from ats_system import calculate_resume_score
+from ats_system import calculate
+
+from config import DATASET_PATH
+from config import RESUME_PATH
 
 app = Flask(__name__)
-CORS(app)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['DATASET_PATH'] = DATASET_PATH
 
-KEYWORDS = ["react", "node", "express", "mongodb", "javascript", "html", "css", "C","api", "git", "github"]
 
-def extract_text_from_pdf(pdf_path):
-    text = ""
-    with fitz.open(pdf_path) as doc:
-        for page in doc:
-            text += page.get_text()
-    return text.lower()
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    score = None
+    total = None
+
+    if request.method == 'POST':
+        if 'resume' not in request.files:
+            return 'No file part', 400
+
+        file = request.files['resume']
+        if file.filename == '':
+            return 'No selected file', 400
+
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        score = calculate_resume_score(filepath, app.config['DATASET_PATH'])
+        total = score.get('technical', 0) + score.get('soft', 0)
+
+    return render_template('index.html', score=score, total=total)
 
 @app.route('/score', methods=['POST'])
-def score_resume():
-    file = request.files['resume']
-    path = f"uploads/{file.filename}"
-    file.save(path)
+def get_score():
+    if not request.is_json:
+        return {"error": "Content-Type must be application/json"}, 400
     
-    text = extract_text_from_pdf(path)
-    score = sum(1 for keyword in KEYWORDS if keyword in text)
-    final_score = int((score / len(KEYWORDS)) * 100)
+    data = request.get_json()
+    pdf_path = data.get('pdf_path')
+    
+    if not pdf_path:
+        return {"error": "pdf_path is required"}, 400
+    
+    if not os.path.exists(pdf_path):
+        return {"error": "PDF file not found"}, 404
 
-    return jsonify({'score': final_score})
+    try:
+        score = calculate(pdf_path)
+        
+        return {
+            "message":"success",
+            "score": score
+        }
+    except Exception as e:
+        return {"error": str(e)}, 500
+
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(debug=True)

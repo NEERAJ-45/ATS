@@ -1,0 +1,28 @@
+myenv
+venv
+__pycache__
+uploads
+# Allow specific files if needed
+!README.md
+!*.txt
+
+# Ignore common model files
+*.h5
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.joblib
+*.pkl
+*.sav
+
+# Ignore TensorFlow and PyTorch checkpoints
+checkpoint
+*.meta
+*.index
+*.data-*
+
+# Ignore temporary files
+*.tmp
+*.log
+*.bak
