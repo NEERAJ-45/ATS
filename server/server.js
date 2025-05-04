@@ -3,7 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const connectDB = require("./config/db.config");
-const { globalErrorHandler } = require("../utils/ApiHandler");
+const { globalErrorHandler } = require("./utils/ApiHandler");
 
 const app = express();
 app.use(cors());
@@ -19,6 +19,7 @@ connectDB()
     })
     .catch((err) => {
         console.log("Error connecting to MongoDB", err);
+        process.exit(1);
     });
 
 app.get("/", (req, res) => {

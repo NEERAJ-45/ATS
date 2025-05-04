@@ -1,6 +1,8 @@
 const express = require("express");
 const {
     getAllApplications,
+    getAcceptedApplications,
+    getRejectedApplications,
     acceptApplication,
     rejectApplication,
 } = require("../controllers/application.controller");
@@ -46,6 +48,20 @@ router.post(
     authenticateToken,
     authorizeRole(["admin"]),
     rejectApplication,
+);
+
+router.get(
+    "/accepted",
+    authenticateToken,
+    authorizeRole(["admin"]),
+    getAcceptedApplications,
+);
+
+router.get(
+    "/rejected",
+    authenticateToken,
+    authorizeRole(["admin"]),
+    getRejectedApplications,
 );
 
 module.exports = router;

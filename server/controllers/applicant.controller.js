@@ -1,5 +1,5 @@
 const Applicant = require("../models/applicant.model");
-const { ApiResponse, ApiError } = require("../../utils/ApiHandler");
+const { ApiResponse, ApiError } = require("../utils/ApiHandler");
 
 const getAllApplicants = async (req, res, next) => {
     try {

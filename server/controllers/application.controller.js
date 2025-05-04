@@ -1,5 +1,5 @@
 const Application = require("../models/application.model");
-const { ApiResponse, ApiError } = require("../../utils/ApiHandler");
+const { ApiResponse, ApiError } = require("../utils/ApiHandler");
 const axios = require("axios");
 const path = require("path");
 
@@ -48,6 +48,32 @@ const apply = async (req, res, next) => {
 const getAllApplications = async (req, res, next) => {
     try {
         const all = await Application.find().populate("applicant");
+        res.json(
+            ApiResponse.success("Applications retrieved successfully", all),
+        );
+    } catch (error) {
+        next(ApiError.serverError("Error fetching applications"));
+    }
+};
+
+const getAcceptedApplications = async (req, res, next) => {
+    try {
+        const all = await Application.find({ status: "selected" }).populate(
+            "applicant",
+        );
+        res.json(
+            ApiResponse.success("Applications retrieved successfully", all),
+        );
+    } catch (error) {
+        next(ApiError.serverError("Error fetching applications"));
+    }
+};
+
+const getRejectedApplications = async (req, res, next) => {
+    try {
+        const all = await Application.find({ status: "rejected" }).populate(
+            "applicant",
+        );
         res.json(
             ApiResponse.success("Applications retrieved successfully", all),
         );
@@ -117,6 +143,8 @@ const rejectApplication = async (req, res, next) => {
 module.exports = {
     apply,
     getAllApplications,
+    getAcceptedApplications,
+    getRejectedApplications,
     acceptApplication,
     rejectApplication,
 };

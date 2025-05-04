@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin.model");
 const Applicant = require("../models/applicant.model");
-const { ApiError, ApiResponse } = require("../../utils/ApiHandler");
+const { ApiError, ApiResponse } = require("../utils/ApiHandler"); 
 
 const loginAdmin = async (req, res, next) => {
     try {
