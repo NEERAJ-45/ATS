@@ -6,13 +6,18 @@ const connectDB = require("./config/db.config");
 const { globalErrorHandler } = require("./utils/ApiHandler");
 
 const app = express();
-app.use(cors());
+
+// CORS setup to allow credentials and specify the frontend URL
+app.use(cors({
+    origin: 'http://localhost:5173', // Your Vite frontend URL
+    credentials: true                // Allow cookies to be sent with requests
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
 // Connect to MongoDB
-
 connectDB()
     .then(() => {
         console.log("Connected to MongoDB");

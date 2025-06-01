@@ -1,2 +1,2 @@
-DATASET_PATH = '/home/shreyash/projects/College/ATS/model/dataset.xlsx'
-RESUME_PATH = '/home/shreyash/projects/College/ATS/model/Resume.pdf'
+DATASET_PATH = 'D:\\Projects\\ATS\\model\\dataset.xlsx'
+RESUME_PATH = 'D:\\Projects\\ATS\\model\\Resume.pdf'
