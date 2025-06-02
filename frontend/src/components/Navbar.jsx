@@ -22,7 +22,7 @@ const Navbar = () => {
                         onClick={handleEditProfile}
                         className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition"
                     >
-                        Edit Profile
+                        Profile
                     </button>
                 ) : null}
                 <button

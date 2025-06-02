@@ -17,7 +17,7 @@ const JobOpeningPage = () => {
     });
     const [formError, setFormError] = useState("");
 
-    const { isLoggedIn, role } = useAuthContext();
+    const { isLoggedIn, role, loggedInUser } = useAuthContext();
     useEffect(() => {
         if (!isLoggedIn || role !== "applicant") {
             navigate("/");
@@ -151,13 +151,18 @@ const JobOpeningPage = () => {
                         technology. We value clean code, collaboration, and
                         growth. Apply now and be part of something exciting!
                     </p>
-
-                    <button
-                        onClick={openModal}
-                        className="mt-8 w-full md:w-1/2 p-4 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 mx-auto block"
-                    >
-                        Apply Now
-                    </button>
+                    {!loggedInUser.alreadyApplied ? (
+                        <button
+                            onClick={openModal}
+                            className="mt-8 w-full md:w-1/2 p-4 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 mx-auto block"
+                        >
+                            Apply Now
+                        </button>
+                    ) : (
+                        <p className="text-center text-red-400">
+                            You have already applied for this job
+                        </p>
+                    )}
                 </div>
 
                 {/* Modal */}

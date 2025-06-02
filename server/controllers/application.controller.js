@@ -1,4 +1,5 @@
 const Application = require("../models/application.model");
+const Applicant = require("../models/applicant.model");
 const { ApiResponse, ApiError } = require("../utils/ApiHandler");
 const axios = require("axios");
 const path = require("path");
@@ -34,6 +35,11 @@ const apply = async (req, res, next) => {
 
         delete newApplication.resumePath;
         delete newApplication.resumeScore;
+
+        await Applicant.updateOne(
+            { _id: req.user._id },
+            { $set: { alreadyApplied: true } },
+        );
         res.json(
             ApiResponse.success(
                 "Application submitted successfully",

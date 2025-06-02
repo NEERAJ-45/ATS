@@ -27,7 +27,12 @@ const applicantSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-    }
+    },
+
+    alreadyApplied: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model("Applicant", applicantSchema);

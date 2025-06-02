@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
             const currUser = response.data.data.user;
             const currRole = response.data.data.role;
             setLoggedInUser(currUser);
-            setRole(currRole); // Assuming your backend returns role
+            setRole(currRole); 
             setIsLoggedIn(true);
         } catch (error) {
             console.log("Auth check failed:", error.message);
