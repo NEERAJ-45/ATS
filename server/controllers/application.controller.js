@@ -140,6 +140,29 @@ const rejectApplication = async (req, res, next) => {
     }
 };
 
+const download = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        console.log("id", id);
+        if (!id) {
+            throw ApiError.badRequest("Application ID is required");
+        }
+
+        const application = await Application.findById(id);
+        if (!application) {
+            throw ApiError.notFound("Application not found");
+        }
+
+        res.download(application.resumePath);
+    } catch (error) {
+        if (error instanceof ApiError) {
+            next(error);
+        } else {
+            next(ApiError.serverError("Error downloading application"));
+        }
+    }
+};
+
 module.exports = {
     apply,
     getAllApplications,
@@ -147,4 +170,5 @@ module.exports = {
     getRejectedApplications,
     acceptApplication,
     rejectApplication,
+    download,
 };

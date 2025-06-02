@@ -5,6 +5,7 @@ const {
     getRejectedApplications,
     acceptApplication,
     rejectApplication,
+    download,
 } = require("../controllers/application.controller");
 const {
     authenticateToken,
@@ -64,4 +65,5 @@ router.get(
     getRejectedApplications,
 );
 
+router.get("/download/:id", authenticateToken, authorizeRole(["admin"]), download);
 module.exports = router;
