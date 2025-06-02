@@ -11,7 +11,7 @@ const AdminLogin = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const { setLoggedInUser, setRole } = useAuthContext();
+    const { login } = useAuthContext();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -27,36 +27,27 @@ const AdminLogin = () => {
             const response = await axios.post(
                 "http://localhost:3000/auth/admin/login",
                 formData,
-                { withCredentials: true } // Ensure cookies are included in the request
+                { withCredentials: true }, // Ensure cookies are included in the request
             );
 
             console.log("Login Response:", response.data); // Debug: Log the response
 
             const { user, role } = response.data.data;
 
-            setLoggedInUser(user);
-            setRole(role);
-
+            login(user, role);
             toast.success("Login successful!");
 
             console.log("User role:", role); // Debug: Log the role to verify
 
-            // Redirect based on role
-            if (role === "admin") {
-                console.log("Redirecting to /admin");
-                navigate("/admin");
-            } else if (role === "applicant") {
-                console.log("Redirecting to /job-openings");
-                navigate("/job-openings");
-            } else {
-                toast.warn("Unknown role. Please contact support.");
-            }
+            console.log("Redirecting to /admin");
+            navigate("/admin");
         } catch (error) {
             console.error("Login error:", error);
 
             // More robust error handling
             const errorMessage =
-                error?.response?.data?.message || "Login failed. Please try again.";
+                error?.response?.data?.message ||
+                "Login failed. Please try again.";
             toast.error(errorMessage);
 
             // Log the full error for debugging if necessary
@@ -74,15 +65,19 @@ const AdminLogin = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-950">
             <Toaster />
             <div className="w-full max-w-md bg-gray-900 p-8 rounded-2xl shadow-md space-y-6">
-                <h2 className="text-3xl font-bold text-white text-center">Sign In As Admin</h2>
+                <h2 className="text-3xl font-bold text-white text-center">
+                    Sign In As Admin
+                </h2>
 
                 {/* Admin Login Button */}
-                
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     {/* Email */}
                     <div className="flex flex-col space-y-2">
-                        <label htmlFor="email" className="text-gray-300 text-sm">
+                        <label
+                            htmlFor="email"
+                            className="text-gray-300 text-sm"
+                        >
                             Email Address
                         </label>
                         <input
@@ -99,7 +94,10 @@ const AdminLogin = () => {
 
                     {/* Password */}
                     <div className="flex flex-col space-y-2 relative">
-                        <label htmlFor="password" className="text-gray-300 text-sm">
+                        <label
+                            htmlFor="password"
+                            className="text-gray-300 text-sm"
+                        >
                             Password
                         </label>
                         <input
@@ -115,7 +113,9 @@ const AdminLogin = () => {
                             type="button"
                             onClick={() => setShowPassword((prev) => !prev)}
                             className="absolute right-3 top-[38px] text-gray-400 hover:text-white"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                            }
                         >
                             {showPassword ? (
                                 <FaEyeSlash className="h-5 w-5 mt-[4px]" />
@@ -135,7 +135,6 @@ const AdminLogin = () => {
                     </button>
 
                     {/* Register */}
-                     
                 </form>
             </div>
         </div>
